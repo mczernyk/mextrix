@@ -1,6 +1,6 @@
 import React from "react"
 import dateFormat from 'dateformat'
-import Websocket from 'react-websocket'
+import WebSocket from 'react-websocket'
 import Orderbook from "./components/Orderbook.js"
 import LiquidationList from "./components/LiquidationList.js"
 import WhaleList from "./components/WhaleList.js"
@@ -199,7 +199,7 @@ class Main extends React.Component {
   render() {
     return (
       <div className="mainContainer">
-        <Websocket
+        <WebSocket
           url="wss://www.bitmex.com/realtime?subscribe=liquidation:XBTUSD,orderBook10:XBTUSD,orderBookL2_25:XBTUSD"
           onMessage={this.handleData.bind(this)}
         />
