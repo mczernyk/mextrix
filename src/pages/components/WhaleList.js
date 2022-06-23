@@ -20,7 +20,8 @@ class WhaleList extends React.Component {
               <th>Size</th>
             </tr>
           </thead>
-          <tbody>
+          {whaleOrders &&
+            <tbody>
             {whaleOrders.map((order, i) => (
               <tr key={i}>
                 <td>{order.time}</td>
@@ -29,7 +30,7 @@ class WhaleList extends React.Component {
                 <td>{order.quantity}</td>
               </tr>
             ))}
-          </tbody>
+          </tbody>}
         </table>
       </div>
     )
