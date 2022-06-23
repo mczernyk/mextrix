@@ -9,7 +9,7 @@ class Orderbook extends React.Component {
   }
 
   render() {
-    const {askOrders=0 , bidOrders=0} = this.props
+    const {askOrders=[] , bidOrders=[]} = this.props
 
 
      let sortHelper = (ordersArray=[]) => {
