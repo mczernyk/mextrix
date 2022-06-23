@@ -9,21 +9,21 @@ import "./style.css"
 
 
 
-class Main extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      instrument: 'XBTUSD',
-      askOrders: [],
-      bidOrders: [],
-      liquidations: [],
-      whaleOrders: [],
-      whaleAndLiq: []
-    }
-    this.handleData = this.handleData.bind(this)
-  }
 
-  handleData(apiData) {
+
+
+
+// markup
+const IndexPage = () => {
+  const [instrument, setInstrument] = useState('XBTUSD')
+  const [askOrders, setAskOrders] = useState([])
+  const [bidOrders, setBidOrders] = useState([])
+  const [liquidations, setLiquidations] = useState([])
+  const [whaleOrders, setWhaleOrders] = useState([])
+  const [whaleAndLiq, setWhaleAndLiq] = useState([])
+
+  const handleData = (apiData) => {
+    console.log(apiData)
     let data = JSON.parse(apiData)
 
     let sortHelper = ordersArray => {
@@ -53,17 +53,25 @@ class Main extends React.Component {
       }
 
       // set state, limit length
-      if (this.state.liquidations.length < 13) {
-        this.setState(prevState => ({
-          liquidations: [liquidationObj, ...prevState.liquidations]
+      if (liquidations.length < 13 && liquidations) {
+        setLiquidations(
+          (prevState) => prevState.set(liquidations, [liquidationObj, ...prevState.liquidations])
+        )
+
+        // this.setState(prevState => ({
+          // liquidations: [liquidationObj, ...prevState.liquidations]
           // whaleAndLiq: [...prevState.liquidations, ...prevState.whaleOrders]
-        }))
+        // }))
       } else {
-        let newState = this.state.liquidations.slice(0, -1)
-        this.setState(prevState => ({
-          liquidations: [liquidationObj, ...newState]
+        let newState = liquidations.slice(0, -1)
+        setLiquidations(
+          (prevState) => prevState.set(liquidations, [liquidationObj, ...newState])
+        )
+
+        // this.setState(prevState => ({
+          // liquidations: [liquidationObj, ...newState]
           // whaleAndLiq: [newState, ...prevState.whaleOrders]
-        }))
+        // }))
       }
       // let combinedState = [...this.state.liquidations, ...this.state.whaleOrders]
 
@@ -72,8 +80,8 @@ class Main extends React.Component {
       // })
 
       let combinedState = [
-        ...this.state.liquidations,
-        ...this.state.whaleOrders
+        ...liquidations,
+        ...whaleOrders
       ]
 
       combinedState.sort((order1, order2) => {
@@ -86,12 +94,10 @@ class Main extends React.Component {
       //   return +order1.time.replace(/[- :]/g, m => replaced[m]) > +order2.time.replace(/[- :]/g, m => replaced[m])
       // })
 
-      this.setState({
-        whaleAndLiq: combinedState
-      })
+      setWhaleAndLiq(combinedState)
 
       console.log('liqobj', liquidationObj)
-      console.log('liq', this.state.liquidations)
+      console.log('liq', liquidations)
     }
     // WHALE ORDER TRACKER - ORDER SIZE OVER $100,000
     if (data.table === 'orderBookL2_25' && data.action === 'insert') {
@@ -118,24 +124,32 @@ class Main extends React.Component {
       // set state with filtered orders, ignore trades below threshold, limit length
       for (let i = 0; i < whaleArray.length; i++) {
         if (whaleArray[i]) {
-          if (this.state.whaleOrders.length < 13) {
-            this.setState(prevState => ({
-              whaleOrders: [whaleArray[i], ...prevState.whaleOrders]
-              // whaleAndLiq: [...prevState.liquidations, ...prevState.whaleOrders]
-            }))
+          if (whaleOrders.length < 13) {
+            setWhaleOrders(
+              (prevState) => prevState.set(whaleOrders, [whaleArray[i], ...prevState.whaleOrders])
+            )
+
+            // this.setState(prevState => ({
+            //   whaleOrders: [whaleArray[i], ...prevState.whaleOrders]
+            //   // whaleAndLiq: [...prevState.liquidations, ...prevState.whaleOrders]
+            // }))
           } else {
-            let newState = this.state.whaleOrders.slice(0, -1)
-            this.setState(prevState => ({
-              whaleOrders: [whaleArray[i], ...newState]
-              // whaleAndLiq: [...prevState.liquidations, ...newState]
-            }))
+            let newState = whaleOrders.slice(0, -1)
+            setWhaleOrders(
+              (prevState) => prevState.set(whaleOrders, [whaleArray[i], ...newState])
+            )
+
+            // this.setState(prevState => ({
+            //   whaleOrders: [whaleArray[i], ...newState]
+            //   // whaleAndLiq: [...prevState.liquidations, ...newState]
+            // }))
           }
         }
       }
 
       let combinedState = [
-        ...this.state.liquidations,
-        ...this.state.whaleOrders
+        ...liquidations,
+        ...whaleOrders
       ]
 
       combinedState.sort((order1, order2) => {
@@ -144,14 +158,14 @@ class Main extends React.Component {
           +order2.time.replace(/[- :]/g, m => replaced[m])
         )
       })
-      // let combinedSort = sortHelper(combinedState).sort((order1, order2) => {
-      //   return +order1.time.replace(/[- :]/g, m => replaced[m]) > +order2.time.replace(/[- :]/g, m => replaced[m])
+
+      setWhaleAndLiq(combinedState)
+
+      // this.setState({
+      //   whaleAndLiq: combinedState
       // })
 
-      this.setState({
-        whaleAndLiq: combinedState
-      })
-      console.log('whale liq', this.state.whaleAndLiq)
+      console.log('whale liq',whaleAndLiq)
     }
 
     // ORDER BOOK
@@ -183,65 +197,59 @@ class Main extends React.Component {
       })
 
       // set state with askOrders/bidOrders arrays of ask/bid objects
-      this.setState({
-        askOrders: askOrders,
-        bidOrders: bidOrders
-      })
+      setAskOrders(askOrders)
+      setBidOrders(bidOrders)
+
+      // this.setState({
+      //   askOrders: askOrders,
+      //   bidOrders: bidOrders
+      // })
     }
   }
 
-  render() {
-    return (
+  useEffect(() => {
+    setInstrument()
+  }, [])
+
+
+  return (
+    <main>
       <div className="mainContainer">
         <Websocket
-          url="wss://www.bitmex.com/realtime?subscribe=liquidation:XBTUSD,orderBook10:XBTUSD,orderBookL2_25:XBTUSD"
-          onMessage={this.handleData.bind(this)}
+          url="wss:/ws.bitmex.com/realtime?subscribe=liquidation:XBTUSD,orderBook10:XBTUSD,orderBookL2_25:XBTUSD"
+          onMessage={handleData.bind(this)}
         />
 
         <div className="topContainer">
           <div className="section">
-            <h2>{this.state.instrument} Liquidations</h2>
+            <h2>{instrument} Liquidations</h2>
             <div className="llContainer">
-              <LiquidationList liquidations={this.state.liquidations} />
+              <LiquidationList liquidations={liquidations} />
               <br />
             </div>
           </div>
 
           <div className="section">
-            <h2>{this.state.instrument} Whale Tracker</h2>
+            <h2>{instrument} Whale Tracker</h2>
             <div className="llContainer">
-              <WhaleList whaleOrders={this.state.whaleOrders} />
+              <WhaleList whaleOrders={whaleOrders} />
               <br />
             </div>
           </div>
 
           <div className="sectionOb">
-            <h2>{this.state.instrument} Orderbook</h2>
+            <h2>{instrument} Orderbook</h2>
             <div className="obContainer">
               <Orderbook
-                askOrders={this.state.askOrders}
-                bidOrders={this.state.bidOrders}
+                askOrders={askOrders}
+                bidOrders={bidOrders}
               />
             </div>
           </div>
         </div>
-
-        {/*<div className="bottomContainer">
-          <h2>{this.state.instrument} Liquidation & Whale Tracker</h2>
-
-          <div className="lbContainer">
-            <LiquidationBubble
-              liquidations={this.state.liquidations}
-              whaleOrders={this.state.whaleOrders}
-              whaleAndLiq={this.state.whaleAndLiq}
-            />
-            <br />
-            <br />
-          </div>
-        </div>*/}
       </div>
-    )
-  }
+    </main>
+  )
 }
 
-export default Main
+export default IndexPage
