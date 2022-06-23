@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Asks, Bids} from './routes'
+import Asks from './Asks'
+import Bids from './Bids'
 
 class Orderbook extends React.Component {
   constructor() {

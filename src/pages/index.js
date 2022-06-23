@@ -1,14 +1,9 @@
 import React from "react"
 import dateFormat from 'dateformat'
 import Websocket from 'react-websocket'
-import {
-  Orderbook,
-  LiquidationList,
-  WhaleList
-} from './components/routes'
-// import Orderbook from "./components/Orderbook.js"
-// import LiquidationList from "./components/LiquidationList.js"
-// import WhaleList from "./components/WhaleList.js"
+import Orderbook from "./components/Orderbook.js"
+import LiquidationList from "./components/LiquidationList.js"
+import WhaleList from "./components/WhaleList.js"
 import "./style.css"
 
 
