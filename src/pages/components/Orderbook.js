@@ -12,7 +12,7 @@ class Orderbook extends React.Component {
     const {askOrders=0 , bidOrders=0} = this.props
 
 
-     let sortHelper = ordersArray => {
+     let sortHelper = (ordersArray=[]) => {
       return ordersArray.map(order => {
         return Object.assign({}, order)
       })
