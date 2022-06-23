@@ -63,8 +63,8 @@ class Orderbook extends React.Component {
               <td className="tfoot"> </td>
             </tr>
           </tfoot>
-          {(this.askOrders && this.bidOrders )&& <tbody>{showOrders(Asks, asksArray).reverse()}</tbody>}
-          {(this.askOrders && this.bidOrders) && <tbody>{showOrders(Bids, bidsArray)}</tbody>}
+          {(askOrders && bidOrders )&& <tbody>{showOrders(Asks, asksArray).reverse()}</tbody>}
+          {(askOrders && bidOrders) && <tbody>{showOrders(Bids, bidsArray)}</tbody>}
         </table>
       </div>
     )
