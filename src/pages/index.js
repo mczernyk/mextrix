@@ -103,55 +103,61 @@ class Main extends React.Component {
       const day = dateFormat(new Date(), 'yyyy-mm-dd h:MM:ss')
 
       // create whale order object; filter size
-      let whaleArray = orderData.map(order => {
-        if (order.size > 100000) {
-          return {
-            type: 'whale',
-            time: day,
-            side: order.side,
-            quantity: order.size,
-            price: order.price
-          }
-        }
-      })
+      if (orderData){
 
-      // set state with filtered orders, ignore trades below threshold, limit length
-      for (let i = 0; i < whaleArray.length; i++) {
-        if (whaleArray[i]) {
-          if (this.state.whaleOrders.length < 13) {
-            this.setState(prevState => ({
-              whaleOrders: [whaleArray[i], ...prevState.whaleOrders]
-              // whaleAndLiq: [...prevState.liquidations, ...prevState.whaleOrders]
-            }))
-          } else {
-            let newState = this.state.whaleOrders.slice(0, -1)
-            this.setState(prevState => ({
-              whaleOrders: [whaleArray[i], ...newState]
-              // whaleAndLiq: [...prevState.liquidations, ...newState]
-            }))
+        let whaleArray = orderData.map(order => {
+          if (order.size > 100000) {
+            return {
+              type: 'whale',
+              time: day,
+              side: order.side,
+              quantity: order.size,
+              price: order.price
+            }
+          }
+        })
+
+        // set state with filtered orders, ignore trades below threshold, limit length
+        for (let i = 0; i < whaleArray.length; i++) {
+          if (whaleArray[i]) {
+            if (this.state.whaleOrders.length < 13) {
+              this.setState(prevState => ({
+                whaleOrders: [whaleArray[i], ...prevState.whaleOrders]
+                // whaleAndLiq: [...prevState.liquidations, ...prevState.whaleOrders]
+              }))
+            } else {
+              let newState = this.state.whaleOrders.slice(0, -1)
+              this.setState(prevState => ({
+                whaleOrders: [whaleArray[i], ...newState]
+                // whaleAndLiq: [...prevState.liquidations, ...newState]
+              }))
+            }
           }
         }
+
+        let combinedState = [
+          ...this.state.liquidations,
+          ...this.state.whaleOrders
+        ]
+
+        combinedState.sort((order1, order2) => {
+          return (
+            +order1.time.replace(/[- :]/g, m => replaced[m]) >
+            +order2.time.replace(/[- :]/g, m => replaced[m])
+          )
+        })
+        // let combinedSort = sortHelper(combinedState).sort((order1, order2) => {
+        //   return +order1.time.replace(/[- :]/g, m => replaced[m]) > +order2.time.replace(/[- :]/g, m => replaced[m])
+        // })
+
+        this.setState({
+          whaleAndLiq: combinedState
+        })
+        console.log('whale liq', this.state.whaleAndLiq)
+
+
       }
 
-      let combinedState = [
-        ...this.state.liquidations,
-        ...this.state.whaleOrders
-      ]
-
-      combinedState.sort((order1, order2) => {
-        return (
-          +order1.time.replace(/[- :]/g, m => replaced[m]) >
-          +order2.time.replace(/[- :]/g, m => replaced[m])
-        )
-      })
-      // let combinedSort = sortHelper(combinedState).sort((order1, order2) => {
-      //   return +order1.time.replace(/[- :]/g, m => replaced[m]) > +order2.time.replace(/[- :]/g, m => replaced[m])
-      // })
-
-      this.setState({
-        whaleAndLiq: combinedState
-      })
-      console.log('whale liq', this.state.whaleAndLiq)
     }
 
     // ORDER BOOK
