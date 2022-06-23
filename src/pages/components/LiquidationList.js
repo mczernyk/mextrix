@@ -20,7 +20,7 @@ class LiquidationList extends React.Component {
               <th>Size</th>
             </tr>
           </thead>
-          <tbody>
+          {liquidations && <tbody>
             {liquidations.map((liquidation, i) => (
               <tr key={i}>
                 <td>{liquidation.time}</td>
@@ -29,7 +29,7 @@ class LiquidationList extends React.Component {
                 <td>{liquidation.quantity}</td>
               </tr>
             ))}
-          </tbody>
+          </tbody>}
         </table>
       </div>
     )
