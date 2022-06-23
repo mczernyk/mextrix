@@ -53,18 +53,21 @@ class Main extends React.Component {
       }
 
       // set state, limit length
-      if (this.state.liquidations.length < 13) {
+      if (this.state.liquidations.length < 13 && this.state.liquidations) {
         this.setState(prevState => ({
           liquidations: [liquidationObj, ...prevState.liquidations]
           // whaleAndLiq: [...prevState.liquidations, ...prevState.whaleOrders]
         }))
       } else {
-        let newState = this.state.liquidations.slice(0, -1)
-        this.setState(prevState => ({
-          liquidations: [liquidationObj, ...newState]
-          // whaleAndLiq: [newState, ...prevState.whaleOrders]
-        }))
+        if (this.state.liquidations) {
+          let newState = this.state.liquidations.slice(0, -1)
+          this.setState(prevState => ({
+            liquidations: [liquidationObj, ...newState]
+            // whaleAndLiq: [newState, ...prevState.whaleOrders]
+          }))
+        }
       }
+
       // let combinedState = [...this.state.liquidations, ...this.state.whaleOrders]
 
       // this.setState({
