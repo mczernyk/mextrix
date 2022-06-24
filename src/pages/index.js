@@ -204,10 +204,10 @@ class Main extends React.Component {
   render() {
     return (
      <div className="mainContainer">
-         {/*<WebSocket
+        <WebSocket
           url="wss://www.bitmex.com/realtime?subscribe=liquidation:XBTUSD,orderBook10:XBTUSD,orderBookL2_25:XBTUSD"
           onMessage={this.handleData.bind(this)}
-    />*/}
+        />
 
         <div className="topContainer">
           <div className="section">
